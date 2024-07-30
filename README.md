@@ -21,7 +21,13 @@ We also publish the training data in the zip file at the link above and here in 
 ## Code
 The code required for each stage of the pipeline, from data collection to fine-tuning the model and processing the predictions, are available as either R files or Python notebooks in the `code/variable_creation` folder.
 **TODO**: Describe each file 
-
+* `collect_mpd.R`: R script to collect and download the target individual manifesto files from the Manifesto Project Dataset API
+* `compile_mpd_qs.ipynb`: Compile individual manifesto files into single dataframe, cleaning, keyword detection for all target keywords using utils in `kw_utils.py`
+* TRAINING SET SELECTION
+* `hyp_fine_tuning.ipynb`: Conduct hyperparameter optimisiation using WandB
+* MODEL APPLICATION
+* PREDICTION PROCESSING/FINAL DATASET CURATION
+* `kw_utils.py`: Contains dictionaries and functions for target keywords translated into each language in the dataset
 ## Fine-tuned model
 **TODO**: The fine-tuned model itself will be made available on the Hugging Face library (or another public zip).  
 
