@@ -20,9 +20,10 @@ We also publish the training data in the zip file at the link above and here in 
 
 ## Code
 The code required for each stage of the pipeline, from data collection to fine-tuning the model and processing the predictions, are available as either R files or Python notebooks in the `code/variable_creation` folder.
+**TODO**: Describe each file 
 
 ## Fine-tuned model
-The fine-tuned model itself will be made avaiable via the Hugging Face library.  
+**TODO**: The fine-tuned model itself will be made available on the Hugging Face library (or another public zip).  
 
 ## Pre-trained XLM-RoBERTa
 
