@@ -12,9 +12,10 @@ We fine-tune the multilingual transformer model -- `XLM-RoBERTa` -- to detect cl
     Institute for Democracy Research (IfDem)"
 
 ## Data
-We make the data available in two formats: 
-* At the **manifesto level**, in which each manifesto is given a score which equals the proportion of sentences in the manifesto that the model labelled climate-relevant. Available in this repo at `data/variable_creation/manifesto_level_30Jul24.csv`
-* At the **quasi-sentence** level, with a binary variable indicating the prediction for climate-relevance for each quasi-sentence, along with the probability scores of each class (only available upon request for the moment as it is very large).
+We make the data available in two formats. Both files are available for download [here](https://drive.google.com/file/d/1_yEc9fxvkdgViVD3JsgHEbKbOsY66lZh/view?usp=sharing):
+* At the **manifesto level**, in which each manifesto is given a score which equals the proportion of sentences in the manifesto that the model labelled climate-relevant. Also available in this repo at `data/variable_creation/manifesto_level_30Jul24.csv`
+* At the **quasi-sentence** level, with a binary variable indicating the prediction for climate-relevance for each quasi-sentence, along with the probability scores of each class.
+
 
 ## Code
 The code required for each stage of the pipeline, from data collection to fine-tuning the model and processing the predictions, are available as either R files or Python notebooks in the `code/variable_creation` folder.
