@@ -24,7 +24,7 @@ The fine-tuned model itself will be made avaiable via the Hugging Face library.
 
 ## Pre-trained XLM-RoBERTa
 
-We used the fantastic `simpletransformers` library to train, test, and perform inference for the RoBERTa side of our model. For more on how to install the `simpletransformers` library, please see:
+We used the fantastic `simpletransformers` library to train, test, and perform inference for the `XLM-RoBERTa` model. For more on how to install the `simpletransformers` library, please see:
 
 https://simpletransformers.ai/docs/installation/
 
