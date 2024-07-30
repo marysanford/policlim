@@ -13,8 +13,11 @@ We fine-tune the multilingual transformer model -- `XLM-RoBERTa` -- to detect cl
 
 ## Data
 We make the data available in two formats: 
-* At the **manifesto level**, in which each manifesto is given a score which equals the proportion of sentences in the manifesto that the model labelled climate-relevant. Available in this repo at `data/variable_creation/manifesto_level_30Jul24.csv'
+* At the **manifesto level**, in which each manifesto is given a score which equals the proportion of sentences in the manifesto that the model labelled climate-relevant. Available in this repo at `data/variable_creation/manifesto_level_30Jul24.csv`
 * At the **quasi-sentence** level, with a binary variable indicating the prediction for climate-relevance for each quasi-sentence, along with the probability scores of each class (only available upon request for the moment as it is very large).
+
+## Code
+The code required for each stage of the pipeline, from data collection to fine-tuning the model and processing the predictions, are available as either R files or Python notebooks in the `code/variable_creation` folder.
 
 ## Fine-tuned model
 The fine-tuned model itself will be made avaiable via the Hugging Face library.  
