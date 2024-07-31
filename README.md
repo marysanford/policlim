@@ -25,7 +25,9 @@ The code required for each stage of the pipeline, from data collection to fine-t
 * `compile_mpd_qs.ipynb`: Compile individual manifesto files into single dataframe, cleaning, keyword detection for all keywords used to select the annotation set using utils in `kw_utils.py`
 * TRAINING SET SELECTION
 * `hyp_fine_tuning.ipynb`: Conduct hyperparameter optimisiation using WandB
-* MODEL APPLICATION
+* `cross_validation.ipynb`: Run five-fold cross-validation on training set
+* `inference.ipynb`: Train final model and apply to rest of dataset to collect predictions of climate change relevance of all remaining quasi-sentences
+* `model_performance.ipynb`: Performance in training and post-hoc validation for our model, keyword search, and `ClimateBert` (still finalising)
 * PREDICTION PROCESSING/FINAL DATASET CURATION
 * `kw_utils.py`: Contains dictionaries and functions for target keywords translated into each language in the dataset
 ## Fine-tuned model
