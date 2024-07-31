@@ -30,6 +30,7 @@ The code required for each stage of the pipeline, from data collection to fine-t
 * `model_performance.ipynb`: Performance in training and post-hoc validation for our model, keyword search, and `ClimateBert` (still finalising)
 * PREDICTION PROCESSING/FINAL DATASET CURATION
 * `kw_utils.py`: Contains dictionaries and functions for target keywords translated into each language in the dataset
+* PLOTS CODE 
 ## Fine-tuned model
 **TODO**: The fine-tuned model itself will be made available on the Hugging Face library (or another public zip).  
 
