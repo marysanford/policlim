@@ -1,4 +1,4 @@
-# policlimate: Multilingual climate change salience classification for political texts
+# policlim: Multilingual climate change salience classification for political texts
 
 This repository makes available the training data and main code used to train the classifer described in the following [paper](UPDATE):
 
