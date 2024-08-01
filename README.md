@@ -13,7 +13,7 @@ We fine-tune the multilingual transformer model -- `XLM-RoBERTa` -- to detect cl
 
 ## Data
 We make the classified data available in two formats. Both files are available for download [here](https://drive.google.com/file/d/1qqSVxC8ZNmY3afI3F3G21d5PkxuMwuOv/view?usp=sharing):
-* At the **manifesto level**, in which each manifesto is given a score which equals the proportion of sentences in the manifesto that the model labelled climate-relevant. Also available in this repo at `data/variable_creation/manifesto_level_30Jul24.csv`
+* At the **manifesto level**, in which each manifesto is given a score which equals the proportion of sentences in the manifesto that the model labelled climate-relevant. Also available in this repo at `data/variable_creation/manifesto_level_1Aug24.csv`
 * At the **quasi-sentence** level, with a binary variable indicating the prediction for climate-relevance for each quasi-sentence, along with the probability scores of each class.
 
 We also publish the training data in the zip file at the link above and here in the repo at `data/variable_creation/training_data`.
@@ -36,7 +36,7 @@ The code required for each stage of the pipeline, from data collection to fine-t
 
 ## Pre-trained XLM-RoBERTa
 
-We used the fantastic `simpletransformers` library to train, test, and perform inference for the `XLM-RoBERTa` model. For more on how to install the `simpletransformers` library, please see:
+We used the `simpletransformers` library to train, test, and perform inference for the `XLM-RoBERTa` model. For more on how to install the `simpletransformers` library, please see:
 
 https://simpletransformers.ai/docs/installation/
 
