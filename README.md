@@ -31,9 +31,9 @@ The code required for each stage of the pipeline, from data collection to fine-t
 * TODO: `manifestoberta.ipynb`: Run `manifestoberta` model over quasi-sentences missing annotation codes.
 * TODO: PREDICTION PROCESSING/FINAL DATASET CURATION
 * `kw_utils.py`: Contains dictionaries and functions for target keywords translated into each language in the dataset
-* PLOTS CODE 
+* TODO: PLOTS CODE 
 ## Fine-tuned model
-**TODO**: The fine-tuned model itself will be made available on the Hugging Face library (or another public zip).  
+TODO: The fine-tuned model itself will be made available on the Hugging Face library (or another public zip).  
 
 ## Pre-trained XLM-RoBERTa
 
