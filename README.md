@@ -1,6 +1,6 @@
 # policlim: Multilingual climate change salience classification for political texts
 
-This repository will make available the training data and main code used to train the classifer described in the following [paper](https://osf.io/ga492/):
+This repository will make available the training data and main code used to train the classifer described in the following [paper](https://osf.io/ga492/), currently under review:
 
     "Measuring Climate Change Salience in Political Manifestos: A Computational Text Analysis Approach" 
     by Mary Sanford, Silvia Pianta, Nicolas Schmid, & Giorgio Musto.
