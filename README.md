@@ -1,8 +1,8 @@
 # policlim: Multilingual climate change salience classification for political texts
 
-This repository will make available the training data and main code used to train the classifer described in the following [paper](https://osf.io/ga492/), currently under review:
+This repository will make available the training data and main code used to train the classifer described in the following [paper](https://osf.io/preprints/osf/bq356), currently under review:
 
-    "Measuring Climate Change Salience in Political Manifestos: A Computational Text Analysis Approach" 
+    "Policlim: A Dataset of Climate Change Discourse in EU Political Manifestos from 1990-2022" 
     by Mary Sanford, Silvia Pianta, Nicolas Schmid, & Giorgio Musto.
   
 If you would like to explore the data or have questions about the code, please get in touch: mary.sanford@cmcc.it 
@@ -14,7 +14,7 @@ We fine-tune the multilingual transformer model -- `XLM-RoBERTa` -- to detect cl
     Institute for Democracy Research (IfDem)"
 
 ## Data
-Upon publication, we will make the dataset available in two formats. Both files will available for download [here]:
+Upon publication, we will make the dataset available in two formats. Both files will be available for download [here]:
 * At the **manifesto level**, in which each manifesto is given a score which equals the proportion of sentences in the manifesto that the model labelled climate-relevant. 
 * At the **quasi-sentence** level, with a binary variable indicating the prediction for climate-relevance for each quasi-sentence, along with the probability scores of each class.
 
@@ -36,7 +36,7 @@ The code required for each stage of the pipeline, from data collection to fine-t
 * `plots.ipynb`: Code for plots
 
 ## Fine-tuned model
-The fine-tuned model itself will be made available here.  
+The fine-tuned model itself will be made available via HuggingFace.  
 
 ## Pre-trained XLM-RoBERTa
 
