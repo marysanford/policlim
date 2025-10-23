@@ -36,9 +36,8 @@ The code required for each stage of the pipeline, from data collection to fine-t
 The fine-tuned model itself will be made available via HuggingFace. If you use the model or data, please appropriately cite the paper. 
 
 `@article{sanford_policlim_2025,
-	title = {Policlim: {A} {Dataset} of {Climate} {Change} {Discourse} in the {Political} {Manifestos} of {Forty}-{Five} {Countries} from 1990 to 2022},
+	title = {Policlim: A Dataset of Climate Change Discourse in the Political Manifestos of Forty-Five Countries from 1990 to 2022},
 	volume = {55},
-	shorttitle = {Policlim},
 	url = {https://www.cambridge.org/core/journals/british-journal-of-political-science/article/policlim-a-dataset-of-climate-change-discourse-in-the-political-manifestos-of-fortyfive-countries-from-1990-to-2022/6EDB6B14410810A9E57A45F68BB09B47},
 	doi = {10.1017/S0007123425100719},
 	journal = {British Journal of Political Science},
