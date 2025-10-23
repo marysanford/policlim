@@ -36,7 +36,7 @@ Upon publication, we will make the dataset available in two formats. Both files 
 We also publish the training and post-hoc validation data here in the repo.
 
 ## Code
-The code required for each stage of the pipeline, from data collection to fine-tuning the model and processing the predictions, are available as either R files or Python notebooks.
+The code required for each stage of the pipeline, from data collection to fine-tuning the model and processing the predictions, are available as either R files or Python notebooks. There is an additional readme in the code folder with further detail on the data and code.
 * `collect_mpd.R`: R script to collect and download the target individual manifesto files from the Manifesto Project Dataset API
 * `compile_mpd_qs.ipynb`: Compile individual manifesto files into single dataframe, cleaning, keyword detection for all keywords used to select the annotation set using utils in `kw_utils.py`
 * `hyp_fine_tuning.ipynb`: Conduct hyperparameter optimisiation using WandB
