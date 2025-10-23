@@ -2,8 +2,9 @@
 
 This repository makes available the training data and main code used to train the classifer described in the following [paper](https://www.cambridge.org/core/journals/british-journal-of-political-science/article/policlim-a-dataset-of-climate-change-discourse-in-the-political-manifestos-of-fortyfive-countries-from-1990-to-2022/6EDB6B14410810A9E57A45F68BB09B47), published in the British Journal of Political Science:
 
-    "Sanford M, Pianta S, Schmid N, Musto G. Policlim: A Dataset of Climate Change Discourse in the Political Manifestos of Forty-Five Countries from 1990 to 2022. 
-    British Journal of Political Science. 2025;55:e131. doi:10.1017/S0007123425100719"
+    "Sanford M, Pianta S, Schmid N, Musto G. Policlim: A Dataset of Climate Change Discourse in the Political Manifestos 
+	of Forty-Five Countries from 1990 to 2022. British Journal of Political Science. 2025;55:e131. 
+	doi:10.1017/S0007123425100719"
   
 If you would like to explore the data or have questions about the code, please get in touch: mary.sanford@cmcc.it 
 
