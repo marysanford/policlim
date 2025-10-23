@@ -1,0 +1,581 @@
+---
+title: "figures"
+creator: Mary Sanford
+date: "2025-06-17"
+---
+
+```{r setup, include=FALSE}
+# UPDATE FILE PATH
+setwd("C:/Users/Sanford/Documents/eiee/capable/manifestos/rep_package")
+
+library(rio)
+library(lubridate)
+library(stargazer)
+library(ggplot2)
+library(labelled)
+library(countrycode)
+library(viridis)
+library(tidyverse)
+library(tmap)
+library(sp)
+library(data.table)
+library(readr)
+#library(rgdal)
+library(RColorBrewer)
+library(terra)
+library(sf)
+library(cartogram)
+library(hrbrthemes)
+library(scales)
+library(zoo)
+library(ggrepel)
+library(rnaturalearth)
+library(ggpubr)
+
+
+# Import manifesto data
+import("data/policlim_full_man_2025-18-06.csv") %>%
+  mutate(iso2c = countrycode(countryname, origin = 'country.name', destination = 'iso2c')) %>%
+  mutate(parfam_name = case_when(parfam == 10 ~ 'ECO',
+                                 parfam==20 ~ 'LEF',
+                                 parfam==30 ~ 'SOC',
+                                 parfam==40 ~ 'LIB',
+                                 parfam==50 ~ 'CHR',
+                                 parfam==60 ~ 'CON',
+                                 parfam==70 ~ 'NAT',
+                                 parfam==80 ~ 'AGR',
+                                 parfam==90 ~ 'ETH',
+                                 parfam==95 ~ 'SIP',
+                                 parfam==98 ~ 'DIV' ),
+         year = as.numeric(substr(date,1,4)),
+         parfam_name_full = case_when(parfam == 10 ~ 'Ecological',
+                                      parfam==20 ~ 'Socialist and other left',
+                                      parfam==30 ~ 'Social democratic',
+                                      parfam==40 ~ 'Liberal',
+                                      parfam==50 ~ 'Christian democratic',
+                                      parfam==60 ~ 'Conservative',
+                                      parfam==70 ~ 'Nationalist and radical right',
+                                      parfam==80 ~ 'Agrarian',
+                                      parfam==90 ~ 'Ethnic and regional',
+                                      parfam==95 ~ 'Special issue parties',
+                                      parfam==98 ~ 'DIV' )) -> predictions
+
+View(predictions)
+names(predictions)
+
+
+predictions %>% 
+  filter(iso2c == 'GB') %>% View()
+
+# Average climate salience by year and country
+predictions <- predictions %>% 
+  mutate(
+    iso2c = ifelse(iso2c == 'GB','UK',iso2c)
+  )
+
+predictions %>%
+  dplyr::select(-edate, -country)  %>%
+  group_by(iso2c, year) %>%
+  summarise(climate_broad_mean = mean(climate, na.rm=T)) -> predictions_cy
+
+
+```
+## salience by country
+```{r FIG.2}
+### AVERAGE CLIMATE CHANGE SALIENCE OVER TIME FOR EACH COUNTRY IN SAMPLE ###
+
+predictions_cy %>%
+  ggplot() +
+  geom_line(aes(x = year, y = climate_broad_mean, color = iso2c)) +
+  geom_point(aes(x = year, y = climate_broad_mean, color = iso2c),size=.8) +
+  facet_wrap(~iso2c) +
+  theme(
+    #panel.grid.major = element_line(color = "grey80"),  # Lighter major grid lines
+    axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1, size = 10),  # Customize x-axis text
+    axis.text.y = element_text(size = 10),  # Customize y-axis text
+    strip.text = element_text(size = 12),  # Bold facet labels
+    plot.title = element_text(size = 14, face = "bold", hjust = 0.5),  # Title settings
+    plot.subtitle = element_text(size = 12, hjust = 0.5),  # Subtitle settings
+    legend.position = "none"  # Remove legend
+  ) +
+  
+  scale_x_continuous(breaks = c(1990, 2000, 2010, 2020)) +
+  xlab("Year") + ylab("Average salience of climate change")
+
+ggsave("figures/FIG2.png",  width = 7, height = 7)
+
+```
+## political orientation aggregation
+```{r FIG.3}
+
+
+predictions %>%
+  # GROUP PARTIES INTO RIGHT VS LEFT
+  mutate(pol_group = case_when(parfam_name == 'CHR' ~  "Right-wing parties",
+                                     parfam_name == 'CON' ~  "Right-wing parties",
+                                     parfam_name == 'NAT' ~  "Right-wing parties",
+                                     #parfam_name == 'LIB' ~  "Libertarian parties", # OMIT LIBERTARIAN PARTIES 
+                                     parfam_name == 'LEF' ~  "Left-wing parties",
+                                     parfam_name == 'SOC' ~  "Left-wing parties",
+                                     parfam_name == 'ECO' ~  "Left-wing parties",
+                                     )) %>%
+  filter(!is.na(pol_group)) %>%
+  group_by(iso2c, year, pol_group) %>%
+  summarise(climate_broad_mean = mean(climate, na.rm=T)) -> for_plot
+
+# Plot
+for_plot %>% # for_plot
+  ggplot() +
+  geom_line(aes(x = year, y = climate_broad_mean, color = pol_group), # pol_orientation
+            lwd = 0.6) +
+  geom_point(aes(x = year,y=climate_broad_mean,color = pol_group),size=.8) +
+  facet_wrap(~iso2c, ncol = 7) +
+  scale_color_discrete(name = "Type of party",
+                       guide = guide_legend(title.position = "top",
+                                            title.hjust = 0.5)) +
+  scale_color_manual(values = c(#"Green parties" = "#00B050",
+                                "Left-wing parties" = "#7A0403FF",
+                                #"Libertarian parties" = "#1AE4B6FF",
+                                #"Christian democratic" = "#36AAF9FF",
+                                "Right-wing parties" = "#4662D7FF",
+                                "Nationalist parties" = "#30123BFF"),
+                     aesthetics = c("color", "fill"),
+                     name = "Party family",
+                     guide = guide_legend(nrow = 1, title.position = "top",
+                                          title.hjust = 0.5)) +
+  #scale_x_continuous(breaks = c(1990, 2000, 2010, 2020)) +
+  ylab("Average salience of climate change") +
+  xlab('')+
+  theme(
+      axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1, size = 10),  # Customize x-axis text
+    axis.text.y = element_text(size = 10),  # Customize y-axis text
+    strip.text = element_text(size = 12),  # Bold facet labels
+    plot.title = element_text(size = 14, face = "bold", hjust = 0.5),  # Title settings
+    plot.subtitle = element_text(size = 12, hjust = 0.5),  # Subtitle settings
+    legend.position = "bottom",  # Remove legend
+    legend.title = element_blank()
+    )
+
+ggsave("figures/FIG3.png", width = 7, height = 7)
+
+### OTHER OPTIONS FOR LEFT VS RIGHT
+
+# 1) Manifesto's right-left index
+
+predictions %>%
+  mutate(pol_orientation = case_when(rile < 0 ~  "Left-wing parties",
+                                     rile > 0 ~  "Right-wing parties")) %>%
+  filter(!is.na(pol_orientation)) %>%
+  group_by(iso2c, year, pol_orientation, country) %>%
+  summarise(climate_broad_mean = mean(climate, na.rm=T),
+            climate_broad_w_mean = sum(climate*(pervote))/
+              (sum(pervote))) -> for_plot
+
+
+## 2) Lowe's right-left index (standardised)
+
+predictions %>%
+  mutate(pol_orientation = case_when(std_lowe_rile < 0 ~  "Left-wing parties",
+                                     std_lowe_rile > 0 ~  "Right-wing parties")) %>%
+  filter(!is.na(pol_orientation)) %>%
+  group_by(iso2c, year, pol_orientation) %>%
+  summarise(climate_broad_mean = mean(climate, na.rm=T),
+            climate_broad_w_mean = sum(climate*(pervote))/
+              (sum(pervote))) -> for_plot
+
+
+```
+## Scatter right-left score and climate change salience
+```{r FIG.4}
+
+### Scatter of salience and right-left score at the party level (average of
+### manifesto scores across years for each party)
+
+# Assign region to each country
+rbind(c("DK", "Northern Europe"), c("FI", "Northern Europe"),
+      c("LT", "Northern Europe"), c("LV", "Northern Europe"),
+      c("EE", "Northern Europe"), c("FR", "Western Europe"),
+      c("DE", "Western Europe"), c("BE", "Western Europe"),
+      c("IE", "Western Europe"), c("GB", "Western Europe"), 
+      c("NL", "Western Europe"), c("LU", "Western Europe"),
+      c("AT", "Western Europe"), c("IT", "Southern Europe"),
+      c("ES", "Southern Europe"), c("GR", "Southern Europe"),
+      c("PT", "Southern Europe"), c("CY", "Southern Europe"),
+      c("SE", "Northern Europe"), c("SI", "Central and Eastern Europe"),
+      c("BG", "Central and Eastern Europe"),
+      c("HR", "Central and Eastern Europe"),
+      c("CZ", "Central and Eastern Europe"),
+      c("HU", "Central and Eastern Europe"),
+      c("PL", "Central and Eastern Europe"),
+      c("RO", "Central and Eastern Europe"),
+      c("SK", "Central and Eastern Europe"),
+      c('AR', "South America"),c("AU","Oceania"),c("BO","South America"),
+      c("BR","South America"),c("CA","North America"),c("CH","Western Europe"),
+      c("CL","South America"),c("CO","South America"),c("CR","Central America"),
+      c("DO","Central America"),c("EC","South America"),c("IL","Middle East"),
+      c("MX","North America"),c("NO","Northern Europe"),c("NZ","Oceania"),
+      c("PA","Central America"),c("US","North America"),c("UY","South America")
+      ) %>%
+  as.data.frame() -> regions
+
+colnames(regions) <- c("iso2c", "region")
+
+predictions %>% left_join(regions, by = "iso2c") %>%
+  mutate(region = factor(region, levels = c("Northern Europe",
+                                            "Western Europe",
+                                            "Central and Eastern Europe",
+                                            "Southern Europe",
+                                            'North America',
+                                            'Central America',
+                                            'South America',
+                                            'Oceania',
+                                            'Middle East'))) -> for_plot
+
+
+# Single out specific parties
+for_plot %>%
+  group_by(countryname, party, iso2c, region) %>% # region 
+  summarise(rile = mean(rile, na.rm = T),
+            lowe_rile = mean(lowe_rile, na.rm = T),
+            std_lowe_rile = mean(std_lowe_rile, na.rm = T),
+            climate = mean(climate, na.rm = T)) -> check
+
+
+
+# Parties to highlight
+predictions %>% group_by(countryname) %>% #%>% filter(year == max(year))
+  ungroup() %>% select(party, partyname, partyabbrev) %>%
+  mutate(partyabbrev = ifelse(party == 62110, 'Greens', partyabbrev),
+         #partyabbrev = ifelse(party == 43951, "Swiss Motorists' Party",partyabbrev),
+         partyabbrev = ifelse(party == 32630, 'FdI', partyabbrev),
+         partyabbrev = ifelse(party == 31425, 'RE', partyabbrev)) -> party_names
+
+highlight <- check %>% select(countryname, iso2c, party, rile, lowe_rile,
+                            std_lowe_rile, climate) %>% 
+  filter(party %in% c(41320, 41521, 32630, 32440, 31425, 31720, 151250,171101,
+                      33320, 33610, 51320, 51620, 41113,62110,180110,61320,61620,160624)) %>%
+  left_join(party_names, by = "party") %>% distinct() %>%
+  mutate(iso2c = case_when(countryname == "United Kingdom" ~ "UK",
+                           .default = iso2c)) %>%
+  
+  mutate(partyabbrev = case_when(partyabbrev == "FN" ~ "RN",
+                           .default = partyabbrev)) %>%
+  #mutate(partyabbrev = case_when(partyabbrev == '' ~ "Swiss Motorists' Party",
+  #                         .default = partyabbrev)) %>%
+  mutate(label = paste0(partyabbrev, " (", iso2c, ")"),
+         nudge_x_std_lowe = case_when(partyabbrev == "Labour" ~ -0.5,
+                                      partyabbrev == "RN" ~ 0.5,
+                                      partyabbrev == "Conservatives" ~ 0.76,
+                                      partyabbrev == "RE" ~ -0.5,
+                                      partyabbrev == "PP" ~ 0.5,
+                                      partyabbrev == "PSOE" ~ -0.5,
+                                      partyabbrev == "90/Greens" ~ 0.5,
+                                      partyabbrev == "SPD" ~ -0.4,
+                                      partyabbrev == "CDU/CSU" ~ 0.5,
+                                      partyabbrev == "PD" ~ -0.04,
+                                      partyabbrev == "Swiss Motorists' Party" ~ -0.3,
+                                      partyabbrev == 'PV' ~ -0.3,
+                                      #partyabbrev == 'Democrats'~,
+                                      partyabbrev == 'Republicans'~0.65,
+                                      partyabbrev == 'PPD'~-.4,
+                                      partyabbrev == "MAS-IPSP"~.5,
+                                      partyabbrev == "PVEM"~-0.10,
+                                      .default = 0),
+         nudge_y_std_lowe = case_when(partyabbrev == "Labour" ~ -0.023,
+                                      partyabbrev == "RN" ~ 0.008,
+                                      partyabbrev == "Conservatives" ~ -0.02,
+                                      partyabbrev == "RE" ~ -0.01,
+                                      partyabbrev == "FdI" ~ -0.015,
+                                      partyabbrev == "PP" ~ 0.01,
+                                      partyabbrev == "PSOE" ~ -0.005,
+                                      partyabbrev == "PD" ~ -0.015,
+                                      partyabbrev == "Swiss Motorists' Party" ~ -0.01,
+                                      partyabbrev == 'Greens' ~ 0.01,
+                                      partyabbrev == "90/Greens" ~ -0.005,
+                                      partyabbrev == 'Democrats'~0.01,
+                                      partyabbrev == 'Republicans'~-0.002,
+                                      partyabbrev == "CDU/CSU" ~ 0.005,
+                                      partyabbrev == "MAS-IPSP"~.005,
+                                      partyabbrev == "PVEM"~0.01,
+                                      .default = 0))
+
+
+# Plot (STANDARDISED LOWE RIGHT-LEFT INDEX)
+library(RColorBrewer)
+
+# Generate a 7-color palette
+region_colors <- brewer.pal(n = 9, name = "Paired") # Use "Set1" palette (bright and distinct)
+region_colors <- setNames(region_colors, unique(for_plot$region)) # Match colors to regions
+
+for_plot %>%
+  group_by(countryname,region,party) %>% #region 
+  summarise(std_lowe_rile = mean(std_lowe_rile, na.rm = T),
+            climate = mean(climate, na.rm = T)) %>%
+  ggplot(aes(x = std_lowe_rile, y = climate)) +
+  geom_point(aes(color = region)) +
+  geom_label_repel(data = highlight, aes(label = label), size = 3, label.size = NA,
+                   fill = alpha("white", 0.8), color = "black", force = 0,
+                   nudge_x = highlight$nudge_x_std_lowe,
+                   nudge_y = highlight$nudge_y_std_lowe) +
+  geom_smooth(method = "lm", color = "#002060") +
+  scale_color_manual(values = region_colors) + # Apply custom color palette
+  labs(x = "Standardised Right-Left score (Lowe et al., 2011)",
+       y = "Average salience of climate change") +
+  #scale_color_viridis_d(option = "B", begin = 0.2, end = 0.8,
+  #                      name = "Regions",
+  #                      guide = guide_legend(title.position = "top",
+  #                                           title.hjust = 0.5, nrow = 2)) +
+  theme(panel.background = element_blank(), legend.position = "bottom",
+        panel.border = element_rect(color = "black", fill = "transparent"),
+        panel.grid = element_line(color = "grey"), legend.key = element_blank(),
+        panel.grid.minor = element_blank(),
+        legend.title = element_blank())
+
+ggsave("figures/FIG4.png", height = 8, width = 8)
+
+
+## extras
+# Check
+check %>%
+   filter(climate > 0.12) %>% View()
+check %>%
+  filter(std_lowe_rile < -1 & climate > 0.1) %>% View()
+
+check %>% filter(std_lowe_rile > 2 & climate < .1)
+
+check %>% filter(region == "North America" & climate > .1 & std_lowe_rile < 0)
+
+
+# Movement Now (Finland)
+finland <- check %>% filter(countryname == "Finland" & climate > 0.15)
+# 5SM (Italy)
+italy <- check %>% filter(countryname == "Italy" & climate > 0.15)
+# Chega (Portugal)
+portugal <- check %>% filter(countryname == "Portugal" & climate < 0.02)
+# Liberal Forum (Austria) 
+austria <- check %>% filter(countryname == "Austria" & party == 42421)
+
+
+```
+
+## map figure
+```{r FIG.A2}
+# Get the world map as an sf object
+world_map_sf <- ne_countries(scale = "medium", returnclass = "sf")
+
+# Remove Antarctica
+world_map_sf <- world_map_sf %>%
+  filter(admin != "Antarctica")
+
+# adjust dataset 
+predictions_up <- predictions %>%
+  filter(!countryname %in% c("Japan", "Turkey", "South Korea", "Iceland")) %>% # wont be in here anyway
+  mutate(countryname = ifelse(countryname == "United States", "United States of America", countryname))
+
+# Filter for most recent elections
+most_recent_elections <- predictions_up %>%
+  group_by(countryname) %>%
+  filter(edate == max(edate)) %>%
+  ungroup()
+
+# Filter for most recent elections
+oldest_elections <- predictions_up %>%
+  group_by(countryname) %>%
+  filter(edate == min(edate)) %>%
+  ungroup()
+
+# Calculate average climate salience
+rec_climate_salience_avg <- most_recent_elections %>%
+  group_by(countryname) %>% 
+  summarise(avg_climate_sal = mean(climate, na.rm = TRUE)) %>% 
+  arrange(desc(avg_climate_sal))
+
+# Merge the climate salience data with the world map
+for_plot <- world_map_sf %>%
+  left_join(rec_climate_salience_avg, by = c("admin" = "countryname"))
+
+# Plot the map with average climate salience
+rec = ggplot(for_plot) +
+  geom_sf(aes(fill = avg_climate_sal)) +
+  scale_fill_viridis_c(direction = -1, na.value = "lightgray", name = "Mean climate change\nsalience") +
+  theme_minimal() +
+  labs(
+    title = "",
+  )
+
+# Calculate average climate salience
+old_climate_salience_avg <- oldest_elections %>%
+  group_by(countryname) %>% 
+  summarise(avg_climate_sal = mean(climate, na.rm = TRUE)) %>% 
+  arrange(desc(avg_climate_sal))
+
+# Merge the climate salience data with the world map
+for_plot <- world_map_sf %>%
+  left_join(old_climate_salience_avg, by = c("admin" = "countryname"))
+
+# Plot the map with average climate salience
+old = ggplot(for_plot) +
+  geom_sf(aes(fill = avg_climate_sal)) +
+  scale_fill_viridis_c(direction = -1, na.value = "lightgray", name = "Mean climate change\nsalience") +
+  theme_minimal() +
+  labs(
+    title = "",
+  )
+
+old
+rec
+
+total = ggarrange(old, rec, common.legend = TRUE, legend = "bottom", 
+                              ncol = 2, labels = c("A", "B"))
+total
+ggsave("figures/FIGA2.png",width=9,height=6)
+
+
+#merge(old_climate_salience_avg,rec_climate_salience_avg,by=c('countryname'))
+#max(predictions$year)
+```
+
+
+## party family over time
+```{r FIG.A3}
+#### Plot time trends of salience by party family ####
+
+# Clean
+predictions %>%
+  # Sum salience by year and party family and count the n. of parties by
+  # party family
+  mutate(party_n = 1) %>%
+  group_by(year, parfam_name, parfam_name_full) %>%
+  summarise(party_n = sum(party_n),
+            salience = mean(climate/party_n, na.rm = T),# /party_n
+            salience_sd = sd(climate/party_n, na.rm = T)) %>% # ,/party_n
+  mutate(salience_sd = case_when(is.na(salience_sd) ~ 0,
+                                 .default = salience_sd)) -> predictions_pfy
+
+# Compute rolling average
+predictions_pfy %>%
+  group_by(parfam_name, parfam_name_full) %>% arrange(year) %>%
+  mutate(salience_sm5 = zoo::rollmean(salience, k = 4, fill = salience)
+  ) -> predictions_pfy
+
+
+
+### Line graph wrapped by party family and with shaded area behind
+
+# Prepare -- normalise by country? 
+predictions %>%
+  group_by(parfam_name, parfam_name_full) %>%
+  summarise(avg_rile = mean(rile, na.rm = T)) %>%
+  arrange(avg_rile) -> order
+
+order
+
+predictions_pfy %>%
+  mutate(parfam_name = factor(parfam_name,
+                              levels = c("ECO",order$parfam_name[-3])), #c("ECO", order$parfam_name[-2]))
+         parfam_name_full = factor(parfam_name_full,
+                                   levels = c("Ecological",order$parfam_name_full[-3]))) %>% # c("Ecological", order$parfam_name_full[-2])
+  # Drop "DIV" party family (too few observations)
+  filter(parfam_name != "DIV") %>%
+  # Add interval of -10%/+10% standard deviation
+  mutate(salience_min_1sd = salience-(salience_sd),
+         salience_max_1sd = salience+(salience_sd),
+         salience_min_2sd = salience-(salience_sd*2),
+         salience_max_2sd = salience+(salience_sd*2),
+         salience_sm5_min_1sd = salience_sm5-(salience_sd),
+         salience_sm5_max_1sd = salience_sm5+(salience_sd),
+         salience_sm5_min_2sd = salience_sm5-(salience_sd*2),
+         salience_sm5_max_2sd = salience_sm5+(salience_sd*2)) -> for_plot
+
+# Check
+predictions %>%
+  select(country, year, parfam_name, partyname, climate) %>%
+  filter(parfam_name == "ECO") %>% arrange(year) %>% View()
+
+# Plot (full party family names in the legend) - 1 Standard deviation
+for_plot %>%
+  ggplot() +
+  geom_ribbon(aes(x = year, ymin = salience_sm5_min_1sd,
+                  ymax = salience_sm5_max_1sd, fill = parfam_name_full),
+              alpha = 0.4) +
+  geom_line(aes(x = year, y = salience_sm5, color = parfam_name_full)) +
+  facet_wrap(~ parfam_name_full, ncol = 5) +
+  scale_color_manual(values = c("Ecological" = "#00B050",
+                                "Socialist and other left" = "#7A0403FF",
+                                "Social democratic" = "#CB2A04FF",
+                                "Ethnic and regional" = "#F66B19FF",
+                                "Special issue parties" = "#FABA39FF",
+                                "Agrarian" = "#C7EF34FF",
+                                "Liberal" = "#1AE4B6FF",
+                                "Christian democratic" = "#36AAF9FF",
+                                "Conservative" = "#4662D7FF",
+                                "Nationalist and radical right" = "#30123BFF"),
+                     aesthetics = c("color", "fill"),
+                     name = "Party family",
+                     guide = guide_legend(nrow = 3, title.position = "top",
+                                          title.hjust = 0.5)) +
+  scale_x_continuous(breaks = c(1990,2000,2010,2020)) +
+  guides(fill="none") +
+  theme(legend.position = "bottom", 
+        axis.text.x = element_text(angle=90),
+        panel.border = element_rect(colour="black", fill = 'transparent'),
+        panel.background= element_rect(fill = 'transparent'),
+        legend.background=element_rect(fill = 'transparent'),
+        legend.key=element_rect(fill = 'transparent'),
+        strip.background=element_rect(fill = 'transparent')) +
+  xlab("Year") + ylab("Average salience of climate change") 
+
+ggsave("figures/FIGA3.png",width = 9, height = 5.5)
+
+```
+
+## Plot time trends of salience, env. and sustain. by country
+```{r FIG.A4A}
+
+### Wrapped plot
+
+# Clean
+predictions %>%
+  group_by(iso2c, year, country) %>%
+  rename("environment" = "per501",
+         "sustainability" = "per416") %>%
+  summarise(climate_mean = mean(climate, na.rm=T),
+            climate_sd = sd(climate, na.rm = T),
+            environment_mean = mean(environment/100, na.rm = T),
+            environment_sd = sd(environment/100, na.rm = T),
+            sustainability_mean = mean(sustainability/100, na.rm = T),
+            sustainability_sd = mean(sustainability/100, na.rm = T)) %>%
+  pivot_longer(cols = !c("iso2c", "year", "country"),
+               names_to = c("variable", ".value"), names_sep = "_") %>% 
+  mutate(name = case_when(variable == "climate" ~ "Climate change salience",
+                          variable == "environment" ~ "Environment 501",
+                          variable == "sustainability" ~ "Sustainability 416"),
+         name = factor(name, levels = c("Climate change salience",
+                                        "Environment 501",
+                                        "Sustainability 416"))) -> for_plot
+
+# Plot
+for_plot %>%
+  ggplot() +
+  geom_line(aes(x = year, y = mean, color = name),
+            lwd = 0.25) +
+  geom_point(aes(x = year, y = mean, color = name),
+            size = .8) +
+  facet_wrap(~iso2c, ncol = 7) +
+  scale_x_continuous(breaks = c(1990,2000,2010,2020)) +
+  ylab("Average salience of climate change") +
+  xlab('')+
+  theme(
+      axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1, size = 10),  # Customize x-axis text
+    axis.text.y = element_text(size = 10),  # Customize y-axis text
+    strip.text = element_text(size = 12),  # Bold facet labels
+    plot.title = element_text(size = 14, face = "bold", hjust = 0.5),  # Title settings
+    plot.subtitle = element_text(size = 12, hjust = 0.5),  # Subtitle settings
+    legend.position = "none"  # Remove legend
+        )
+
+
+ggsave("figures/FIGA4.png",width = 7, height = 7)
+
+```
+
