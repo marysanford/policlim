@@ -14,6 +14,20 @@ We fine-tune the multilingual transformer model -- `XLM-RoBERTa` -- to detect cl
     Riethmüller, Felicia; Zehnter, Lisa (2023): Manifesto Corpus. Version: 2023-1. Berlin: WZB Berlin Social Science Center/Göttingen:
     Institute for Democracy Research (IfDem)"
 
+## The model
+The fine-tuned model itself is available via HuggingFace [here](https://huggingface.co/marysanford/policlim). If you use the model or data, please appropriately cite the paper. 
+
+`@article{sanford_policlim_2025,
+	title = {Policlim: A Dataset of Climate Change Discourse in the Political Manifestos of Forty-Five Countries from 1990 to 2022},
+	volume = {55},
+	url = {https://www.cambridge.org/core/journals/british-journal-of-political-science/article/policlim-a-dataset-of-climate-change-discourse-in-the-political-manifestos-of-fortyfive-countries-from-1990-to-2022/6EDB6B14410810A9E57A45F68BB09B47},
+	doi = {10.1017/S0007123425100719},
+	journal = {British Journal of Political Science},
+	author = {Sanford, Mary and Pianta, Silvia and Schmid, Nicolas and Musto, Giorgio},
+	year = {2025},
+	pages = {e131},
+}`
+
 ## Data
 Upon publication, we will make the dataset available in two formats. Both files will be available for download [here](https://drive.google.com/file/d/1X1kyVL8b3lTrewav8JnJZIG3tJObwoIm/view?usp=drive_link):
 * At the **manifesto level**, in which each manifesto is given a score which equals the proportion of sentences in the manifesto that the model labelled climate-relevant. You can also find this here in the data folder of the repo.
@@ -31,21 +45,6 @@ The code required for each stage of the pipeline, from data collection to fine-t
 * `model_performance.ipynb`: Performance in training and post-hoc validation for our model, keyword search, and `ClimateBert`
 * `kw_utils.py`: Contains dictionaries and functions for target keywords translated into each language in the dataset
 * `figures.Rmd`: Code for plots
-
-## Fine-tuned model
-The fine-tuned model itself will be made available via HuggingFace. If you use the model or data, please appropriately cite the paper. 
-
-`@article{sanford_policlim_2025,
-	title = {Policlim: A Dataset of Climate Change Discourse in the Political Manifestos of Forty-Five Countries from 1990 to 2022},
-	volume = {55},
-	url = {https://www.cambridge.org/core/journals/british-journal-of-political-science/article/policlim-a-dataset-of-climate-change-discourse-in-the-political-manifestos-of-fortyfive-countries-from-1990-to-2022/6EDB6B14410810A9E57A45F68BB09B47},
-	doi = {10.1017/S0007123425100719},
-	journal = {British Journal of Political Science},
-	author = {Sanford, Mary and Pianta, Silvia and Schmid, Nicolas and Musto, Giorgio},
-	year = {2025},
-	pages = {e131},
-}`
-
 
 ## Pre-trained XLM-RoBERTa
 
