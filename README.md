@@ -28,7 +28,7 @@ The fine-tuned model itself is available via HuggingFace [here](https://huggingf
 	pages = {e131}}
 
 ## Data
-Upon publication, we will make the dataset available in two formats. Both files will be available for download [here via GoogleDrive](https://drive.google.com/file/d/1X1kyVL8b3lTrewav8JnJZIG3tJObwoIm/view?usp=drive_link) or [here via HuggingFace](https://huggingface.co/datasets/marysanford/policlim_data):
+Upon publication, we will make the dataset available in two formats. Both files will be available for download upon request:
 * At the **manifesto level**, in which each manifesto is given a score which equals the proportion of sentences in the manifesto that the model labelled climate-relevant. You can also find this here in the data folder of the repo.
 * At the **quasi-sentence** level, with a binary variable indicating the prediction for climate-relevance for each quasi-sentence, along with the probability scores of each class. This file is too large to store here but is available for download at the link above.
 
