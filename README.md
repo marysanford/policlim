@@ -32,7 +32,7 @@ Upon publication, we will make the dataset available in two formats. Both files 
 * At the **manifesto level**, in which each manifesto is given a score which equals the proportion of sentences in the manifesto that the model labelled climate-relevant. You can also find this here in the data folder of the repo.
 * At the **quasi-sentence** level, with a binary variable indicating the prediction for climate-relevance for each quasi-sentence, along with the probability scores of each class. This file is too large to store here but is available for download at the link above.
 
-We also publish the training and post-hoc validation data here in the repo.
+We also publish the training and post-hoc validation data upon request.
 
 ## Code
 The code required for each stage of the pipeline, from data collection to fine-tuning the model and processing the predictions, are available as either R files or Python notebooks. There is an additional readme in the code folder with further detail on the data and code.
