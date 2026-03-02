@@ -11,8 +11,10 @@ If you would like to explore the data or have questions about the code, please g
 We fine-tune the multilingual transformer model -- `XLM-RoBERTa` -- to detect climate change salience in political manifestos (in their original languages) across the EU. The manifestos are downloaded from the [Manifesto Project Dataset](https://manifesto-project.wzb.eu/):
 
     Lehmann, Pola; Franzmann, Simon; Al-Gaddooa, Denise; Burst, Tobias; Ivanusch, Christoph; Lewandowski, Jirka; Regel, Sven;
-    Riethmüller, Felicia; Zehnter, Lisa (2023): Manifesto Corpus. Version: 2023-1. Berlin: WZB Berlin Social Science Center/Göttingen:
+    Riethmüller, Felicia; Zehnter, Lisa (2024): Manifesto Corpus. Version: 2024-1. Berlin: WZB Berlin Social Science Center/Göttingen:
     Institute for Democracy Research (IfDem)
+
+	Lehmann, Pola / Franzmann, Simon / Al-Gaddooa, Denise / Burst, Tobias / Ivanusch, Christoph / Regel, Sven / Riethmüller, Felicia / Volkens, Andrea / Weßels, Bernhard / Zehnter, Lisa (2024): The Manifesto Data Collection. Manifesto Project (MRG/CMP/MARPOR). Version 2024a. Berlin: Wissenschaftszentrum Berlin für Sozialforschung (WZB) / Göttingen: Institut für Demokratieforschung (IfDem). https://doi.org/10.25522/manifesto.mpds.2024a
 
 ## The model
 The fine-tuned model itself is available via HuggingFace [here](https://huggingface.co/marysanford/policlim). If you use the model or data, please appropriately cite the paper. 
